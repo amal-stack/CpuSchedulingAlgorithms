@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpuSchedulingAlgorithms", "CpuSchedulingAlgorithms\CpuSchedulingAlgorithms.csproj", "{5266B829-A4B2-47B8-84E8-C69BEC81E831}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpuSchedulingAlgorithms", "CpuSchedulingAlgorithms\CpuSchedulingAlgorithms.csproj", "{5266B829-A4B2-47B8-84E8-C69BEC81E831}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpuSchedulingAlgorithms.Console", "CpuSchedulingAlgorithms.Console\CpuSchedulingAlgorithms.Console.csproj", "{121CF860-695B-4DC5-AAC8-A47B689EEA68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpuSchedulingAlgorithms.Console", "CpuSchedulingAlgorithms.Console\CpuSchedulingAlgorithms.Console.csproj", "{121CF860-695B-4DC5-AAC8-A47B689EEA68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextTableCreator", "TextTableCreator\TextTableCreator.csproj", "{765FB941-3FD6-4B55-9254-35DB9974684B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{121CF860-695B-4DC5-AAC8-A47B689EEA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{121CF860-695B-4DC5-AAC8-A47B689EEA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{121CF860-695B-4DC5-AAC8-A47B689EEA68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{765FB941-3FD6-4B55-9254-35DB9974684B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{765FB941-3FD6-4B55-9254-35DB9974684B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{765FB941-3FD6-4B55-9254-35DB9974684B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{765FB941-3FD6-4B55-9254-35DB9974684B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
