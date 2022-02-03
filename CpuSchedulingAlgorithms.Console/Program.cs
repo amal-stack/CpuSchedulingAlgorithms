@@ -3,11 +3,13 @@ using TextTableCreator;
 using static System.Console;
 
 // Display title
-ForegroundColor = ConsoleColor.DarkCyan;
+ForegroundColor = ConsoleColor.Green;
 WriteLine("CPU Scheduling Algorithms".ToUpper());
-WriteLine();
-WriteLine();
 ResetColor();
+
+WriteLine(new string('-', 100));
+WriteLine();
+WriteLine();
 
 // Input number of processes
 Write("Enter number of processes > ");
@@ -22,8 +24,8 @@ if (!int.TryParse(ReadLine(), out int processCount) || processCount <= 0)
 WriteLine();
 
 // Input process source
-ForegroundColor = ConsoleColor.DarkCyan;
 WriteLine("Please enter your choice");
+ForegroundColor = ConsoleColor.DarkCyan;
 WriteLine("1. Input processes manually");
 WriteLine("2. Generate random processes");
 ResetColor();
@@ -38,7 +40,11 @@ ArrivalSchedule schedule = choice switch
 
 
 // Display input processes
+WriteLine();
+ForegroundColor = ConsoleColor.Green;
 WriteLine("Input Processes");
+ResetColor();
+WriteLine(new string('-', 100));
 WriteLine();
 
 TableBuilder
@@ -52,8 +58,9 @@ TableBuilder
 WriteLine();
 
 // Input scheduling algorithm
-ForegroundColor = ConsoleColor.DarkCyan;
+
 WriteLine("Please enter the preferred scheduling algorithm");
+ForegroundColor = ConsoleColor.DarkCyan;
 WriteLine("1. First Come First Serve (FCFS)");
 WriteLine("2. Shortest Job First");
 WriteLine("3. Shortest Remaining Time First");
@@ -73,33 +80,62 @@ IProcessScheduler scheduler = algo switch
 WriteLine("Press any key to start simulator...");
 ReadKey(intercept: false);
 
+// Flag that indicates whether to wait after each time quantum;
+bool wait = true;
+
 // Continue until no more processes left
 while (scheduler.Proceed())
 {
     WriteLine();
-    TableBuilder
-        .ForSingle(scheduler)
-        .AddColumn("Current Time Quantum", s => s.Now.ToString())
-        .AddColumn("Completed Processes",
-            s => string.Join(",", from p in s.CompletedProcesses
-                                  select p.Process.Id))
-        .AddColumn("Current Process", s => s.CurrentProcess?.Process.Id.ToString() ?? "Idle")
-        .Configure(o => o.Rule = TableRule.None)
-        .Build()
-        .WriteToConsole(c => c.HeaderColor = ConsoleColor.DarkCyan);
+    ForegroundColor = ConsoleColor.Green;
+    WriteLine("Current State");
+    ResetColor();
+    WriteLine(new string('-', 50));
 
+    WriteLine();
+    WriteLine($"Current Time Quantum: {scheduler.Now}");
+    WriteLine($"Current Process: {scheduler.CurrentProcess?.Process.Id.ToString() ?? "<Idle>"}");
+
+    string completedProcessesString = string.Join(",",
+        from p in scheduler.CompletedProcesses
+        select p.Process.Id);
+
+    WriteLine($"Completed Processes: {completedProcessesString}");
+
+    WriteLine();
+    ForegroundColor = ConsoleColor.Green;
+    WriteLine("Gantt Chart");
+    ResetColor();
+    WriteLine(new string('-', 50));
+    
+    WriteLine();
     WriteLine(CreateGanttChart(scheduler));
 
     WriteLine();
+    WriteLine(new string('=', 100));
     WriteLine();
 
+    WriteLine("Press X to jump to statistics.");
+    WriteLine("Press any other key to continue");
+
+    
+
     // Wait for key press before proceeding to the next time quantum
-    ReadKey(intercept: false);
+    if (wait)
+    {
+        var key = ReadKey(intercept: false);
+        if (key.KeyChar is 'x' or 'X')
+        {
+            wait = false;
+        }
+    }
 }
 
 // Display statistics table after completion
-ForegroundColor = ConsoleColor.DarkGreen;
-WriteLine("Completed. Statistics:");
+ForegroundColor = ConsoleColor.Green;
+WriteLine();
+WriteLine("Completed. Statistics:".ToUpper());
+WriteLine(new string('-', 100));
 WriteLine();
 ResetColor();
 
@@ -115,12 +151,11 @@ TableBuilder
     .Build()
     .WriteToConsole(c => c.HeaderColor = ConsoleColor.DarkCyan);
 
-ForegroundColor = ConsoleColor.DarkGreen;
+ForegroundColor = ConsoleColor.White;
 WriteLine();
 WriteLine($"Average Turnaround Time: {scheduler.CompletedProcesses.Average(p => p.TurnaroundTime)}");
 WriteLine($"Average Wait Time: {scheduler.CompletedProcesses.Average(p => p.WaitTime)}");
 ResetColor();
-
 
 /// <summary>
 /// Keeps reading input until not a valid integer.
@@ -146,7 +181,9 @@ static ArrivalSchedule ReadProcesses(int count)
 
     for (int i = 0; i < count; i++)
     {
+        ForegroundColor = ConsoleColor.DarkCyan;
         WriteLine($"Process {i + 1}");
+        ResetColor();
 
         Write("... Enter process ID: ");
         int processId = ReadInteger();
@@ -177,7 +214,7 @@ static string CreateGanttChart(IProcessScheduler scheduler)
     builder.Append(" | ");
     foreach (var (time, pcb) in scheduler.Timeline)
     {
-        builder.Append($"{pcb?.Process.Id.ToString() ?? "Idle"} [{time}] | ");
+        builder.Append($"{pcb?.Process.Id.ToString() ?? "<Idle>"} [{time}] | ");
     }
     builder.AppendLine();
     return builder.ToString();

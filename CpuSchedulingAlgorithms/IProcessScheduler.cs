@@ -23,7 +23,7 @@ public interface IProcessScheduler
     /// Move to the next time quantum.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if the scheduler has completed execution of all processes in the <see cref="ArrivalSchedule"/> else <see langword="false"=""/>.
+    /// <see langword="true"/> if the scheduler has completed execution of all processes in the <see cref="ArrivalSchedule"/> else <see langword="false"/>.
     /// </returns>
     bool Proceed();
 }
