@@ -1,5 +1,9 @@
 ﻿namespace CpuSchedulingAlgorithms;
 
+
+/// <summary>
+/// Used by schedulers to maintain the state of execution of processes.
+/// </summary>
 public class ProcessControlBlock
 {
     public int TimeLeft { get; private set; }
@@ -19,6 +23,11 @@ public class ProcessControlBlock
         TimeLeft = process.BurstTime;
     }
 
+    /// <summary>
+    /// Simulates the execution of the process by decrementing the time left for completion by 1.
+    /// </summary>
+    /// <param name="time">The time quantum at which the process is being executed.</param>
+    /// <exception cref="InvalidOperationException">Thrown when called after completion of execution.</exception>
     public void Execute(int time)
     {
         if (TimeLeft == Process.BurstTime)
