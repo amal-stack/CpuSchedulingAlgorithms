@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CpuSchedulingAlgorithms\CpuSchedulingAlgorithms.csproj" />
+    <ProjectReference Include="..\TextTableCreator\TextTableCreator.csproj" />
   </ItemGroup>
 
 </Project>
