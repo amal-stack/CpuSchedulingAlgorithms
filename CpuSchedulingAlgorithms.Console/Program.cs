@@ -140,14 +140,14 @@ WriteLine();
 ResetColor();
 
 TableBuilder
-    .For(scheduler.CompletedProcesses)
+    .For(scheduler.CompletedProcesses.OrderBy(p => p.Process.Id))
     .AddColumn("Process Id", p => p.Process.Id.ToString())
     .AddColumn("Arrival Time", p => p.ArrivalTime.ToString())
     .AddColumn("Burst Time", p => p.Process.BurstTime.ToString())
     .AddColumn("Completion Time", p => p.CompletionTime.ToString())
     .AddColumn("Turnaround Time", p => p.TurnaroundTime.ToString())
     .AddColumn("Wait Time", p => p.WaitTime.ToString())
-    .AddColumn("", p => p.ResponseTime.ToString())
+    .AddColumn("Response Time", p => p.ResponseTime.ToString())
     .Build()
     .WriteToConsole(c => c.HeaderColor = ConsoleColor.DarkCyan);
 
