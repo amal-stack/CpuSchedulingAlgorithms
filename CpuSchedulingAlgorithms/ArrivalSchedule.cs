@@ -3,7 +3,7 @@
 /// <summary>
 /// Simulates an arrival schedule by exposing a list of processes for a specified arrival time. 
 /// </summary>
-public class ArrivalSchedule : IEnumerable<KeyValuePair<int, IList<Process>>>
+public class ArrivalSchedule : IEnumerable<(int ArrivalTime, Process Process)>
 {
     private readonly Dictionary<int, IList<Process>> timeProcessesPair = new();
 
@@ -42,8 +42,11 @@ public class ArrivalSchedule : IEnumerable<KeyValuePair<int, IList<Process>>>
         timeProcessesPair[arrivalTime] = new List<Process>(processes);
     }
 
-    public IEnumerator<KeyValuePair<int, IList<Process>>> GetEnumerator() => timeProcessesPair.GetEnumerator();
-
+    /// <summary>
+    ///  Returns the processes arrived at the arrival time <paramref name="time"/>.
+    /// </summary>
+    /// <param name="time">Arrival time</param>
+    /// <returns>The processes arrived at the time. If no processes arrive, an empty <see cref="IEnumerable{Process}" />.</returns>
     public IEnumerable<Process> GetProcessesArrivedAt(int time)
     {
         if (timeProcessesPair.TryGetValue(time, out var processes))
@@ -51,6 +54,17 @@ public class ArrivalSchedule : IEnumerable<KeyValuePair<int, IList<Process>>>
             return processes;
         }
         return Enumerable.Empty<Process>();
+    }
+
+    public IEnumerator<(int ArrivalTime, Process Process)> GetEnumerator()
+    {
+        for (int i = 0; i <= EndTime; i++)
+        {
+            foreach (var process in GetProcessesArrivedAt(i))
+            {
+                yield return (i, process);
+            }
+        }
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
