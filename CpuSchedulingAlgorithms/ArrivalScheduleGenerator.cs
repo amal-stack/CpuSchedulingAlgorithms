@@ -9,7 +9,7 @@ public class ArrivalScheduleGenerator
     /// <param name="processCount">The number of processes to be generated.</param>
     /// <param name="arrivalTimeLimit">The maximum arrival time that a process can have.</param>
     /// <param name="burstTimeLimit">The maximum burst time that a process can have.</param>
-    /// <returns></returns>
+    /// <returns>The generated <see cref="ArrivalSchedule"/></returns>
     public static ArrivalSchedule GenerateRandomArrivalSchedule(
         int processCount, 
         int arrivalTimeLimit = 10, 

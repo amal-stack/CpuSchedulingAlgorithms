@@ -23,7 +23,6 @@ public class ShortestRemainingTimeScheduler : IProcessScheduler
         this.schedule = schedule;
     }
 
-
     public ProcessTimeline Timeline { get; } = new();
 
     public ProcessControlBlock? CurrentProcess { get; private set; }
@@ -51,6 +50,12 @@ public class ShortestRemainingTimeScheduler : IProcessScheduler
             }
         }
 
+        // If current process exists(not null) and is not complete, add it back to ready queue
+        if (CurrentProcess is { IsComplete: false })
+        {
+            readyQueue.Enqueue(CurrentProcess, CurrentProcess.TimeLeft);
+        }
+
         // Get the process with the shortest remaining time
         CurrentProcess = HasNextProcess ? readyQueue.Dequeue() : null;
 
@@ -66,13 +71,8 @@ public class ShortestRemainingTimeScheduler : IProcessScheduler
         {
             completedProcesses.Add(CompletedProcess.FromProcessControlBlock(CurrentProcess, Now));
         }
-        // If current process exists(not null) and is not complete, add it back to ready queue
-        else if (CurrentProcess is not null)
-        {
-            readyQueue.Enqueue(CurrentProcess, CurrentProcess.TimeLeft);
-        }
+        
 
         return true;
     }
 }
-
