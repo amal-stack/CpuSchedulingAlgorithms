@@ -13,3 +13,5 @@ This project currently implements the following scheduling algorithms:
 * Another non-preemptive algorithm where the process requiring the shortest time to complete is granted the CPU first.
 ### [Shortest Remaining Time First](https://github.com/amal-stack/CpuSchedulingAlgorithms/blob/master/CpuSchedulingAlgorithms/ShortestRemainingTimeScheduler.cs)
 * Preemptive version of shortest job first where the ready queue will be examined after each time quantum and if required suspending the current process if a process requiring a lesser amount of time arrives.
+### [Round Robin](https://github.com/amal-stack/CpuSchedulingAlgorithms/blob/master/CpuSchedulingAlgorithms/RoundRobinScheduler.cs)
+* A preemptive algorithm that allocates the CPU for a fixed *time quantum* for each process in the ready queue, a variation of first-come, first serve.
