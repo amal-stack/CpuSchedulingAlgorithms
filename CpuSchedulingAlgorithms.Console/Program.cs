@@ -35,7 +35,7 @@ ArrivalSchedule schedule = choice switch
 {
     1 => ReadProcesses(processCount),
     2 => ArrivalScheduleGenerator.GenerateRandomArrivalSchedule(processCount),
-    _ => throw new ArgumentOutOfRangeException("Invalid input")
+    _ => throw new InvalidDataException("Invalid input")
 };
 
 
@@ -48,7 +48,7 @@ WriteLine(new string('-', 100));
 WriteLine();
 
 TableBuilder
-    .For(schedule)
+    .For(schedule.OrderBy(i => i.Process.Id))
     .AddColumn("Process ID", p => p.Process.Id.ToString())
     .AddColumn("Arrival Time", p => p.ArrivalTime.ToString())
     .AddColumn("Burst Time", p => p.Process.BurstTime.ToString())
@@ -64,16 +64,23 @@ ForegroundColor = ConsoleColor.DarkCyan;
 WriteLine("1. First Come First Serve (FCFS)");
 WriteLine("2. Shortest Job First");
 WriteLine("3. Shortest Remaining Time First");
+WriteLine("4. Round Robin");
 ResetColor();
 Write("> ");
 int algo = ReadInteger();
-
+int timeQuantum = 1;
+if (algo == 4)
+{
+    Write("Enter time quantum > ");
+    timeQuantum = ReadInteger();
+}
 // Create scheduler based on input
 IProcessScheduler scheduler = algo switch
 {
-    1 => new FirstComeFirstServeScheduler(schedule),
+    4 => new RoundRobinScheduler(schedule, timeQuantum), 
+    3 => new ShortestRemainingTimeScheduler(schedule),
     2 => new ShortestJobFirstScheduler(schedule),
-    _ => new ShortestRemainingTimeScheduler(schedule)
+    _ => new FirstComeFirstServeScheduler(schedule),
 };
 
 // Wait for key press to start
