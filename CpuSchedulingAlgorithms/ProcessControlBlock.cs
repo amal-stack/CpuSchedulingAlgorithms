@@ -12,7 +12,7 @@ public class ProcessControlBlock
 
     public int ArrivalTime { get; }
 
-    public int ResponseTime { get; private set; }
+    public int FirstCpuTime { get; private set; }
 
     public bool IsComplete => TimeLeft == 0;
 
@@ -32,7 +32,7 @@ public class ProcessControlBlock
     {
         if (TimeLeft == Process.BurstTime)
         {
-            ResponseTime = time;
+            FirstCpuTime = time;
         }
         if (IsComplete)
         {

@@ -24,7 +24,7 @@ public struct CompletedProcess
             {
                 Process = pcb.Process,
                 ArrivalTime = pcb.ArrivalTime,
-                ResponseTime = pcb.ResponseTime,
+                ResponseTime = pcb.FirstCpuTime - pcb.ArrivalTime,
                 CompletionTime = completionTime
             }
             : throw new InvalidOperationException("Process is incomplete");
