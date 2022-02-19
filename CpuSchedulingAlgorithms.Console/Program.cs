@@ -1,4 +1,5 @@
 ﻿using CpuSchedulingAlgorithms;
+using CpuSchedulingAlgorithms.Console;
 using TextTableCreator;
 using static System.Console;
 
@@ -10,6 +11,28 @@ ResetColor();
 WriteLine(new string('-', 100));
 WriteLine();
 WriteLine();
+
+// Input scheduling algorithm
+WriteLine("Please enter the preferred scheduling algorithm");
+ForegroundColor = ConsoleColor.DarkCyan;
+WriteLine("1. First Come First Serve (FCFS)");
+WriteLine("2. Shortest Job First");
+WriteLine("3. Shortest Remaining Time First");
+WriteLine("4. Round Robin");
+WriteLine("5. Priority(Non-preemptive)");
+ResetColor();
+Write("> ");
+
+int algo = InputHelpers.ReadInteger();
+
+// Read time quantum if algo is Round-robin(4)
+int timeQuantum = 1;
+if (algo == 4)
+{
+    Write("Enter time quantum > ");
+    timeQuantum = InputHelpers.ReadInteger();
+}
+
 
 // Input number of processes
 Write("Enter number of processes > ");
@@ -26,18 +49,19 @@ WriteLine();
 // Input process source
 WriteLine("Please enter your choice");
 ForegroundColor = ConsoleColor.DarkCyan;
-WriteLine("1. Input processes manually");
-WriteLine("2. Generate random processes");
+WriteLine("1. Input processes manually (one by one)");
+WriteLine("2. Input processes manually (space-separated on single line)");
+WriteLine("3. Generate random processes");
 ResetColor();
 Write("> ");
-int choice = ReadInteger();
+int choice = InputHelpers.ReadInteger();
 ArrivalSchedule schedule = choice switch
 {
-    1 => ReadProcesses(processCount),
-    2 => ArrivalScheduleGenerator.GenerateRandomArrivalSchedule(processCount),
+    1 => InputHelpers.ReadProcesses(processCount, readPriority: algo == 5),
+    2 => InputHelpers.ReadProcessesSingleLine(readPriority: algo == 5),
+    3 => ArrivalScheduleGenerator.GenerateRandomArrivalSchedule(processCount),
     _ => throw new InvalidDataException("Invalid input")
 };
-
 
 // Display input processes
 WriteLine();
@@ -47,37 +71,29 @@ ResetColor();
 WriteLine(new string('-', 100));
 WriteLine();
 
-TableBuilder
+var inputTableBuilder = TableBuilder
     .For(schedule.OrderBy(i => i.Process.Id))
-    .AddColumn("Process ID", p => p.Process.Id.ToString())
-    .AddColumn("Arrival Time", p => p.ArrivalTime.ToString())
-    .AddColumn("Burst Time", p => p.Process.BurstTime.ToString())
+    .AddColumn("Process ID", p => p.Process.Id)
+    .AddColumn("Arrival Time", p => p.ArrivalTime)
+    .AddColumn("Burst Time", p => p.Process.BurstTime);
+
+if (algo == 5)
+{
+    inputTableBuilder.AddColumn("Priority", p => p.Process.Priority);
+}
+
+inputTableBuilder
     .Build()
     .WriteToConsole(c => c.HeaderColor = ConsoleColor.DarkCyan);
 
 WriteLine();
 
-// Input scheduling algorithm
 
-WriteLine("Please enter the preferred scheduling algorithm");
-ForegroundColor = ConsoleColor.DarkCyan;
-WriteLine("1. First Come First Serve (FCFS)");
-WriteLine("2. Shortest Job First");
-WriteLine("3. Shortest Remaining Time First");
-WriteLine("4. Round Robin");
-ResetColor();
-Write("> ");
-int algo = ReadInteger();
-int timeQuantum = 1;
-if (algo == 4)
-{
-    Write("Enter time quantum > ");
-    timeQuantum = ReadInteger();
-}
 // Create scheduler based on input
 IProcessScheduler scheduler = algo switch
 {
-    4 => new RoundRobinScheduler(schedule, timeQuantum), 
+    5 => new PriorityScheduler(schedule),
+    4 => new RoundRobinScheduler(schedule, timeQuantum),
     3 => new ShortestRemainingTimeScheduler(schedule),
     2 => new ShortestJobFirstScheduler(schedule),
     _ => new FirstComeFirstServeScheduler(schedule),
@@ -108,15 +124,18 @@ while (scheduler.Proceed())
         select p.Process.Id);
 
     WriteLine($"Completed Processes: {completedProcessesString}");
-
+    Write($"Ready Queue[Process ID | Time Left]: ");
+    OutputHelpers.WriteProcessQueue(scheduler);
     WriteLine();
+    WriteLine();
+
     ForegroundColor = ConsoleColor.Green;
     WriteLine("Gantt Chart");
     ResetColor();
     WriteLine(new string('-', 50));
-    
+
     WriteLine();
-    WriteLine(CreateGanttChart(scheduler));
+    OutputHelpers.WriteGanttChart(scheduler);
 
     WriteLine();
     WriteLine(new string('=', 100));
@@ -124,8 +143,6 @@ while (scheduler.Proceed())
 
     WriteLine("Press X to jump to statistics.");
     WriteLine("Press any other key to continue");
-
-    
 
     // Wait for key press before proceeding to the next time quantum
     if (wait)
@@ -146,84 +163,27 @@ WriteLine(new string('-', 100));
 WriteLine();
 ResetColor();
 
-TableBuilder
+var statisticsTableBuilder = TableBuilder
     .For(scheduler.CompletedProcesses.OrderBy(p => p.Process.Id))
-    .AddColumn("Process Id", p => p.Process.Id.ToString())
-    .AddColumn("Arrival Time", p => p.ArrivalTime.ToString())
-    .AddColumn("Burst Time", p => p.Process.BurstTime.ToString())
-    .AddColumn("Completion Time", p => p.CompletionTime.ToString())
-    .AddColumn("Turnaround Time", p => p.TurnaroundTime.ToString())
-    .AddColumn("Wait Time", p => p.WaitTime.ToString())
-    .AddColumn("Response Time", p => p.ResponseTime.ToString())
+    .AddColumn("Process Id", p => p.Process.Id)
+    .AddColumn("Arrival", p => p.ArrivalTime)
+    .AddColumn("Burst", p => p.Process.BurstTime);
+
+if (algo == 5)
+{
+    statisticsTableBuilder.AddColumn("Priority", p => p.Process.Priority);
+}
+
+statisticsTableBuilder
+    .AddColumn("Completion", p => p.CompletionTime)
+    .AddColumn("Turnaround", p => p.TurnaroundTime)
+    .AddColumn("Wait", p => p.WaitTime)
+    .AddColumn("Response", p => p.ResponseTime)
     .Build()
     .WriteToConsole(c => c.HeaderColor = ConsoleColor.DarkCyan);
 
-ForegroundColor = ConsoleColor.White;
+ForegroundColor = ConsoleColor.DarkCyan;
 WriteLine();
-WriteLine($"Average Turnaround Time: {scheduler.CompletedProcesses.Average(p => p.TurnaroundTime)}");
-WriteLine($"Average Wait Time: {scheduler.CompletedProcesses.Average(p => p.WaitTime)}");
+WriteLine($"Average Turnaround Time: {scheduler.CompletedProcesses.DefaultIfEmpty().Average(p => p.TurnaroundTime)}");
+WriteLine($"Average Wait Time: {scheduler.CompletedProcesses.DefaultIfEmpty().Average(p => p.WaitTime)}");
 ResetColor();
-
-/// <summary>
-/// Keeps reading input until not a valid integer.
-/// </summary>
-static int ReadInteger()
-{
-    int value;
-    while (!int.TryParse(ReadLine(), out value))
-    {
-        ForegroundColor = ConsoleColor.Red;
-        WriteLine("Invalid input. Try again");
-        ResetColor();
-    }
-    return value;
-}
-
-/// <summary>
-/// Reads the details of the specified number of processes from the console.
-/// </summary>
-static ArrivalSchedule ReadProcesses(int count)
-{
-    ArrivalSchedule schedule = new();
-
-    for (int i = 0; i < count; i++)
-    {
-        ForegroundColor = ConsoleColor.DarkCyan;
-        WriteLine($"Process {i + 1}");
-        ResetColor();
-
-        Write("... Enter process ID: ");
-        int processId = ReadInteger();
-
-        Write("... Enter arrival time: ");
-        int arrivalTime = ReadInteger();
-
-        Write("... Enter burst time: ");
-        int burstTime = ReadInteger();
-
-        WriteLine();
-
-        schedule.Add(
-            arrivalTime,
-            new Process { Id = processId, BurstTime = burstTime });
-    }
-    return schedule;
-}
-
-
-/// <summary>
-/// Creates a Gantt chart using the scheduler's <see cref="ProcessTimeline"/>.
-/// </summary>
-static string CreateGanttChart(IProcessScheduler scheduler)
-{
-    System.Text.StringBuilder builder = new();
-    builder.AppendLine();
-    builder.Append(" | ");
-    foreach (var (time, pcb) in scheduler.Timeline)
-    {
-        builder.Append($"{pcb?.Process.Id.ToString() ?? "<Idle>"} [{time}] | ");
-    }
-    builder.AppendLine();
-    return builder.ToString();
-}
-
