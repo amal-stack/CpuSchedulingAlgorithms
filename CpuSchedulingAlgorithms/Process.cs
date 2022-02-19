@@ -10,4 +10,6 @@ public record struct Process
     public string? Name { get; set; }
 
     public int BurstTime { get; set; }
+
+    public int Priority { get; set; }
 }
