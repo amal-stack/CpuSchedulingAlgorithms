@@ -15,3 +15,12 @@ This project currently implements the following scheduling algorithms:
 * Preemptive version of shortest job first where the ready queue will be examined after each time quantum and if required suspending the current process if a process requiring a lesser amount of time arrives.
 ### [Round Robin](https://github.com/amal-stack/CpuSchedulingAlgorithms/blob/master/CpuSchedulingAlgorithms/RoundRobinScheduler.cs)
 * A preemptive algorithm that allocates the CPU for a fixed *time quantum* for each process in the ready queue, a variation of first-come, first serve.
+
+### [Priority (Non-preemptive)](https://github.com/amal-stack/CpuSchedulingAlgorithms/blob/master/CpuSchedulingAlgorithms/PriorityScheduler.cs)
+* A scheduling algorithm where each process has an associated priority value. The process with the highest priority will be granted the CPU first. This is implemented as a non-preemptive algorithm where the priority is represented as an integer. The lower the value of the integer, the higher the process priority.
+
+## Console Client
+To run the app, use the following command:
+```
+dotnet run --project CpuSchedulingAlgorithms.Console
+```
