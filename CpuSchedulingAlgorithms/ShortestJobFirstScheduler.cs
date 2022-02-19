@@ -20,6 +20,8 @@ public class ShortestJobFirstScheduler : IProcessScheduler
 
     public int Now { get; private set; }
 
+    public ProcessQueueView RunQueue => new(readyQueue.UnorderedItems.Select(i => i.Element));
+
     public ShortestJobFirstScheduler(ArrivalSchedule schedule)
     {
         this.schedule = schedule;
@@ -68,4 +70,3 @@ public class ShortestJobFirstScheduler : IProcessScheduler
         return true;
     }
 }
-

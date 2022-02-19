@@ -29,6 +29,8 @@ public class ShortestRemainingTimeScheduler : IProcessScheduler
 
     public int Now { get; private set; }
 
+    public ProcessQueueView RunQueue => new(readyQueue.UnorderedItems.Select(i => i.Element));
+
     /// <inheritdoc/>
     public bool Proceed()
     {

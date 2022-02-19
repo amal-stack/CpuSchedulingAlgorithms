@@ -7,11 +7,6 @@ namespace CpuSchedulingAlgorithms;
 /// </summary>
 public interface IProcessScheduler
 {
-    /// <summary>
-    /// A read-only list of processes that has completed execution that the scheuler maintains.
-    /// </summary>
-    IReadOnlyList<CompletedProcess> CompletedProcesses { get; }
-    ProcessTimeline Timeline { get; }
     ProcessControlBlock? CurrentProcess { get; }
 
     /// <summary>
@@ -26,5 +21,14 @@ public interface IProcessScheduler
     /// <see langword="true"/> if the scheduler has completed execution of all processes in the <see cref="ArrivalSchedule"/> else <see langword="false"/>.
     /// </returns>
     bool Proceed();
+
+    /// <summary>
+    /// A read-only list of processes that has completed execution that the scheuler maintains.
+    /// </summary>
+    IReadOnlyList<CompletedProcess> CompletedProcesses { get; }
+
+    ProcessTimeline Timeline { get; }
+
+    ProcessQueueView RunQueue { get; }
 }
 

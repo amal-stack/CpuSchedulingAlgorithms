@@ -23,6 +23,8 @@ public class FirstComeFirstServeScheduler : IProcessScheduler
 
     public ProcessTimeline Timeline { get; } = new();
 
+    public ProcessQueueView RunQueue => new(readyQueue);
+
     public FirstComeFirstServeScheduler(ArrivalSchedule schedule)
     {
         this.schedule = schedule;

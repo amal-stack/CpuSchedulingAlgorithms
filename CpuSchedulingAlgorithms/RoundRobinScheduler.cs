@@ -26,15 +26,15 @@ public class RoundRobinScheduler : IProcessScheduler
         TimeQuantum = timeQuantum;
     }
 
-
     public ProcessTimeline Timeline { get; } = new();
 
     public ProcessControlBlock? CurrentProcess { get; private set; }
 
     public int Now { get; private set; }
 
-
     public int TimeQuantum { get; set; }
+
+    public ProcessQueueView RunQueue => new(readyQueue);
 
     /// <inheritdoc/>
     public bool Proceed()
@@ -43,7 +43,9 @@ public class RoundRobinScheduler : IProcessScheduler
         // * no current process exists(null) or if the current process is complete and
         // * no next process (ready queue is empty) and
         // * current time quantum is more than the schedule end time/maximum arrival time of all processes) 
-        if (CurrentProcess is null or { IsComplete: true } && !HasNextProcess && Now > schedule.EndTime)
+        if (CurrentProcess is null or { IsComplete: true } 
+            && !HasNextProcess 
+            && Now > schedule.EndTime)
         {
             return false;
         }
