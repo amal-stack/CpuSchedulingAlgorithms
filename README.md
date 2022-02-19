@@ -22,5 +22,5 @@ This project currently implements the following scheduling algorithms:
 ## Console Client
 To run the app, use the following command:
 ```
-dotnet run CpuSchedulingAlgorithms.Console
+dotnet run --project CpuSchedulingAlgorithms.Console
 ```
