@@ -29,9 +29,11 @@ public class TableBuilder<T>
         return this;
     }
 
-    public TableBuilder<T> AddColumn(string name, Func<T, string> selector)
+    public TableBuilder<T> AddColumn<TColumn>(string name, Func<T, TColumn> selector)
     {
-        _columns.Add(new TableColumn<T>(name, selector));
+        _columns.Add(new TableColumn<T>(
+            name,  
+            value => selector?.Invoke(value)?.ToString()));
         return this;
     }
 
