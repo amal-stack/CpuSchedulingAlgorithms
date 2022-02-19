@@ -24,7 +24,6 @@ public class ProcessTimeline : IEnumerable<KeyValuePair<int, ProcessControlBlock
     /// <returns>The process as a <see cref="ProcessControlBlock"/> object.</returns>
     public ProcessControlBlock? GetProcessExecutedAt(int time) => _timeline[time];
 
-
     public ProcessControlBlock? this[int time] => GetProcessExecutedAt(time);
 
     public IEnumerator<KeyValuePair<int, ProcessControlBlock?>> GetEnumerator() => _timeline.GetEnumerator();

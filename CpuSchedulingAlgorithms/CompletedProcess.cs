@@ -17,7 +17,6 @@ public struct CompletedProcess
 
     public int WaitTime => TurnaroundTime - Process.BurstTime;
 
-
     public static CompletedProcess FromProcessControlBlock(ProcessControlBlock pcb, int completionTime)
         => pcb.IsComplete
             ? new CompletedProcess

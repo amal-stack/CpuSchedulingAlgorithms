@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace CpuSchedulingAlgorithms;
+﻿namespace CpuSchedulingAlgorithms;
 
 
 public class FirstComeFirstServeScheduler : IProcessScheduler

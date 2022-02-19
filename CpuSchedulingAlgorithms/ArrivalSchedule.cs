@@ -66,7 +66,6 @@ public class ArrivalSchedule : IEnumerable<(int ArrivalTime, Process Process)>
             }
         }
     }
-
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 }
 

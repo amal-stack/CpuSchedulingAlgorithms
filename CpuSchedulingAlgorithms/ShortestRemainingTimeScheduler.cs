@@ -73,7 +73,7 @@ public class ShortestRemainingTimeScheduler : IProcessScheduler
         {
             completedProcesses.Add(CompletedProcess.FromProcessControlBlock(CurrentProcess, Now));
         }
-        
+
 
         return true;
     }

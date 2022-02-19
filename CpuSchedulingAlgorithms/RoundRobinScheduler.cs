@@ -43,8 +43,8 @@ public class RoundRobinScheduler : IProcessScheduler
         // * no current process exists(null) or if the current process is complete and
         // * no next process (ready queue is empty) and
         // * current time quantum is more than the schedule end time/maximum arrival time of all processes) 
-        if (CurrentProcess is null or { IsComplete: true } 
-            && !HasNextProcess 
+        if (CurrentProcess is null or { IsComplete: true }
+            && !HasNextProcess
             && Now > schedule.EndTime)
         {
             return false;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace CpuSchedulingAlgorithms;
+﻿namespace CpuSchedulingAlgorithms;
 
 /// <summary>
 /// Describes the members of a process scheduler.

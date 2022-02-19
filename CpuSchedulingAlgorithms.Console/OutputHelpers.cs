@@ -38,7 +38,6 @@ public static class OutputHelpers
             Write($"{pcb.Process.Id}|{pcb.TimeLeft}");
             ResetColor();
             Write("]");
-            Write(", ");
         }
     }
 }
