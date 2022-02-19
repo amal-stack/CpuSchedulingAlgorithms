@@ -18,3 +18,9 @@ This project currently implements the following scheduling algorithms:
 
 ### [Priority (Non-preemptive)](https://github.com/amal-stack/CpuSchedulingAlgorithms/blob/master/CpuSchedulingAlgorithms/PriorityScheduler.cs)
 * A scheduling algorithm where each process has an associated priority value. The process with the highest priority will be granted the CPU first. This is implemented as a non-preemptive algorithm where the priority is represented as an integer. The lower the value of the integer, the higher the process priority.
+
+# Console Client
+To run the app, use the following command:
+```
+dotnet run CpuSchedulingAlgorithms.Console
+```
