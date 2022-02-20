@@ -34,17 +34,7 @@ if (algo == 4)
 }
 
 
-// Input number of processes
-Write("Enter number of processes > ");
-if (!int.TryParse(ReadLine(), out int processCount) || processCount <= 0)
-{
-    ForegroundColor = ConsoleColor.DarkYellow;
-    WriteLine("Invalid input. Using default process count of 5");
-    ResetColor();
 
-    processCount = 5;
-}
-WriteLine();
 
 // Input process source
 WriteLine("Please enter your choice");
@@ -55,6 +45,23 @@ WriteLine("3. Generate random processes");
 ResetColor();
 Write("> ");
 int choice = InputHelpers.ReadInteger();
+
+// Input number of processes
+int processCount = 0;
+if (choice is 1 or 3)
+{
+    Write("Enter number of processes > ");
+    if (!int.TryParse(ReadLine(), out processCount) || processCount <= 0)
+    {
+        ForegroundColor = ConsoleColor.DarkYellow;
+        WriteLine("Invalid input. Using default process count of 5");
+        ResetColor();
+
+        processCount = 5;
+    }
+}
+WriteLine();
+
 ArrivalSchedule schedule = choice switch
 {
     1 => InputHelpers.ReadProcesses(processCount, readPriority: algo == 5),
@@ -77,7 +84,7 @@ var inputTableBuilder = TableBuilder
     .AddColumn("Arrival Time", p => p.ArrivalTime)
     .AddColumn("Burst Time", p => p.Process.BurstTime);
 
-if (algo == 5)
+if (algo is 5)
 {
     inputTableBuilder.AddColumn("Priority", p => p.Process.Priority);
 }
@@ -92,6 +99,7 @@ WriteLine();
 // Create scheduler based on input
 IProcessScheduler scheduler = algo switch
 {
+
     5 => new PriorityScheduler(schedule),
     4 => new RoundRobinScheduler(schedule, timeQuantum),
     3 => new ShortestRemainingTimeScheduler(schedule),
@@ -187,3 +195,4 @@ WriteLine();
 WriteLine($"Average Turnaround Time: {scheduler.CompletedProcesses.DefaultIfEmpty().Average(p => p.TurnaroundTime)}");
 WriteLine($"Average Wait Time: {scheduler.CompletedProcesses.DefaultIfEmpty().Average(p => p.WaitTime)}");
 ResetColor();
+ReadKey();
